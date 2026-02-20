@@ -1,66 +1,69 @@
-﻿namespace Homework_01.Backend
+﻿using System.Web;
+using static System.Net.Mime.MediaTypeNames;
+
+namespace Homework_01.Backend
 {
     public class Time
     {
         private int _hour;
-        private int _millisecond;
         private int _minute;
         private int _second;
+        private int _millisecond;
 
         public Time() {
             _hour = 0;
-            _millisecond = 0;
             _minute = 0;
             _second = 0;
+            _millisecond = 0;
         }
         public Time(int hours)
         {
             Hour = hours;
-            _millisecond = 0;
             _minute = 0;
             _second = 0;
-        }
-        public Time(int hours, int minutes)
-        {
-            Hour = hours;
             _millisecond = 0;
-            Minute = minutes;
+        }
+        public Time(int hour, int minute)
+        {
+            Hour = hour;
+            Minute = minute;
             _second = 0;
+            _millisecond = 0;
         }
 
-        public Time(int hours, int minutes, int seconds)
+        public Time(int hour, int minute, int second)
         {
-            Hour = hours;
+            Hour = hour;
+            Minute = minute;
+            Second = second;
             _millisecond = 0;
-            Minute = minutes;
-            Second = seconds;
         }
-        public Time(int hours, int minutes, int seconds,int milliseconds)
+        public Time(int hour, int minute, int second,int millisecond)
         {
-            Hour = hours;
-            Millisecond = milliseconds;
-            Minute = minutes;
-            Second = seconds;
+            Hour = hour;
+            Minute = minute;
+            Second = second;
+            Millisecond = millisecond;
         }
         public int Hour
         {
             get => _hour;
             set => _hour = ValidHour(value);
         }
-        public int Millisecond
-        {
-            get => _millisecond;
-            set => _millisecond = value;
-        }
         public int Minute
         {
             get => _minute;
-            set => _minute = value;
+            set => _minute = ValidMinute(value);
         }
         public int Second
         {
             get => _second;
-            set => _second = value;
+            set => _second = ValidSecond(value);
+        }
+        public int Millisecond
+        {
+            get => _millisecond;
+            set => _millisecond = ValidMillisecond(value);
         }
         private int ValidHour( int hour)
         {
@@ -80,15 +83,78 @@
             return minute;
 
         }
-        /*private int ValidSecondo(int second)
+        private int ValidSecond(int second)
         {
-            if (minute < 0 || minute > 59)
+            if (second < 0 || second > 59)
             {
-                throw new ArgumentOutOfRangeException(nameof(minute), $"The Minute : {minute}, is not valid. ");
+                throw new ArgumentOutOfRangeException(nameof(second), $"The Second : {second}, is not valid. ");
             }
-            return minute;
+            return second;
 
-        }*/
+        }
+        private int ValidMillisecond(int millisecond)
+        {
+            if (millisecond < 0 || millisecond > 999)
+            {
+                throw new ArgumentOutOfRangeException(nameof(millisecond), $"The ValidMillisecond : {millisecond}, is not valid. ");
+            }
+            return millisecond;
+
+        }
+      public override string ToString()
+
+        {
+            int localhour;
+            string tt = "AM";
+            if (Hour == 12 )
+            {
+                tt = "PM";
+                localhour = Hour ;
+                return $"{localhour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
+            }
+            else if(Hour > 12 ) 
+            {
+                tt = "PM";
+                localhour = Hour - 12 ;
+                return $"{localhour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
+            }
+            else if (Hour == 00)
+            {
+                tt = "AM";
+                localhour = 12;
+                return $"{localhour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
+            }
+
+
+            return $"{Hour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
+        }
+
+        public int ToMilliseconds() {
+            var hours = Hour * 3600000;
+            var minutes = Minute * 60000;
+            var seconds = Second * 1000;
+            var milliseconds = Millisecond;
+
+            return hours + minutes + seconds + milliseconds;
+        }
+
+        public int ToSeconds()
+        {
+           return ToMilliseconds() / 1000;
+        }
+        public int ToMinutes()
+        {
+            return ToMilliseconds() / 60000;
+        }
+        public int Add()
+        {
+            return 0;
+        }
+       public bool IsOtherDay()
+        {
+            return false; 
+        }
+
 
     }
 }
