@@ -10,7 +10,8 @@ namespace Homework_01.Backend
         private int _second;
         private int _millisecond;
 
-        public Time() {
+        public Time()
+        {
             _hour = 0;
             _minute = 0;
             _second = 0;
@@ -38,7 +39,7 @@ namespace Homework_01.Backend
             Second = second;
             _millisecond = 0;
         }
-        public Time(int hour, int minute, int second,int millisecond)
+        public Time(int hour, int minute, int second, int millisecond)
         {
             Hour = hour;
             Minute = minute;
@@ -65,9 +66,9 @@ namespace Homework_01.Backend
             get => _millisecond;
             set => _millisecond = ValidMillisecond(value);
         }
-        private int ValidHour( int hour)
+        private int ValidHour(int hour)
         {
-            if(hour < 0 || hour > 23)
+            if (hour < 0 || hour > 23)
             {
                 throw new ArgumentOutOfRangeException(nameof(hour), $"The hour : {hour}, is not valid. ");
             }
@@ -101,21 +102,21 @@ namespace Homework_01.Backend
             return millisecond;
 
         }
-      public override string ToString()
+        public override string ToString()
 
         {
             int localhour;
             string tt = "AM";
-            if (Hour == 12 )
+            if (Hour == 12)
             {
                 tt = "PM";
-                localhour = Hour ;
+                localhour = Hour;
                 return $"{localhour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
             }
-            else if(Hour > 12 ) 
+            else if (Hour > 12)
             {
                 tt = "PM";
-                localhour = Hour - 12 ;
+                localhour = Hour - 12;
                 return $"{localhour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
             }
             else if (Hour == 00)
@@ -129,7 +130,8 @@ namespace Homework_01.Backend
             return $"{Hour:00}:{Minute:00}:{Second:00}.{Millisecond:000} {tt}";
         }
 
-        public int ToMilliseconds() {
+        public int ToMilliseconds()
+        {
             var hours = Hour * 3600000;
             var minutes = Minute * 60000;
             var seconds = Second * 1000;
@@ -140,19 +142,37 @@ namespace Homework_01.Backend
 
         public int ToSeconds()
         {
-           return ToMilliseconds() / 1000;
+            return ToMilliseconds() / 1000;
         }
         public int ToMinutes()
         {
             return ToMilliseconds() / 60000;
         }
-        public int Add()
+        public Time Add(Time t)
         {
-            return 0;
+            var totalMillisenconds = Millisecond + t.Millisecond;
+            var extraSeconds = totalMillisenconds / 1000;
+            var milliseconds = totalMillisenconds % 1000;
+
+            var totalSeconds = Second + extraSeconds + t.Second;
+            var extraMinutes = totalSeconds / 60;
+            var seconds = totalSeconds % 60;
+
+            var totalMinutes = Minute + extraMinutes + t.Minute;
+            var extraHour = totalMinutes / 60;
+            var minutes = totalMinutes % 60;
+
+            var totalHour = Hour + extraHour + t.Hour;
+            var hours = totalHour % 24;
+            var newHour = new Time(hours, minutes, seconds, milliseconds);
+
+            return newHour;
         }
-       public bool IsOtherDay()
+
+        public bool IsOtherDay(Time t)
         {
-            return false; 
+            return ToMilliseconds() + t.ToMilliseconds() >= 86400000;
+
         }
 
 
